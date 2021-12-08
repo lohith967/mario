@@ -1,7 +1,24 @@
+
+noseX="";
+noseY="";
+Gamestatus="";
+
+function startGame(){
+Gamestatus="start Game";
+document.getElementById("status").innerHTML = "Game is loading!!"
+}
+
+function game(){
+
+	console.log("nose = " + noseX + ", noseY = " + noseY);
+}
+
+
 function preload() {
 	world_start = loadSound("world_start.wav");
 	setSprites();
 	MarioAnimation();
+	
 }
 
 function setup() {
@@ -9,13 +26,33 @@ function setup() {
     canvas.parent('canvas');
 
 	instializeInSetup(mario);
+
+	video= createCapture(VIDEO);
+	video.size(800,400);
+	video.parent("Game_console");
+
+	poseNet = ml5.poseNet(video , modelLoaded);
+	poseNet.on('pose',gotPoses);
+}
+
+function modelLoaded(){
+	console.log("Model Loaded !");
 }
 
 function draw() {
-	game()
+	game();
+	
 }
+function gotPoses(results){
+	if(results.length >0){
 
+		console.log(results);
+		noseX = results[0].pose.nose.x;
+		noseY= results[0].pose.nose.y;
+		
 
+	}
+}
 
 
 
